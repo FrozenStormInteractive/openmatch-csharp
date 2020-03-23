@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <OpenMatchVersion>0.9.0</OpenMatchVersion>
+
+    <PackageId>OpenMatch.Api</PackageId>
+    <Title>OpenMatch Api</Title>
+    <Version>0.9.0</Version>
+    <PackageDescription>C# API for OpenMatch</PackageDescription>
+    <Authors>FrozenStorm Interactive</Authors>
+    <PackageLicenseFile>License</PackageLicenseFile>
+
+    <RepositoryUrl>https://github.com/FrozenStormInteractive/openmatch-csharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../License" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Access="public" Include="$(IntermediateOutputPath)/open-match-$(OpenMatchVersion)/api/**/*.proto" GrpcServices="Both" ProtoRoot="$(IntermediateOutputPath)/open-match-$(OpenMatchVersion); $(IntermediateOutputPath)/open-match-$(OpenMatchVersion)/third_party" />
+
+    <Protobuf Access="internal" Include="$(IntermediateOutputPath)/open-match-$(OpenMatchVersion)/third_party/google/**/*.proto" GrpcServices="Both" ProtoRoot="$(IntermediateOutputPath)/open-match-$(OpenMatchVersion)/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/google" />
+    <Protobuf Access="internal" Include="$(IntermediateOutputPath)/open-match-$(OpenMatchVersion)/third_party/protoc-gen-swagger/**/*.proto" GrpcServices="Both" ProtoRoot="$(IntermediateOutputPath)/open-match-$(OpenMatchVersion)/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/protoc-gen-swagger" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" Version="2.27.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.11.4" />
+    <PackageReference Include="Grpc.Tools" Version="2.27.0" />
+  </ItemGroup>
+
+  <Target Name="DownloadSourcesFiles" BeforeTargets="UnzipSourcesFiles;Build" Condition="!Exists('$(IntermediateOutputPath)/om-sources-$(OpenMatchVersion).zip')">
+      <DownloadFile SourceUrl="https://github.com/googleforgames/open-match/archive/v$(OpenMatchVersion).zip" DestinationFileName="om-sources-$(OpenMatchVersion).zip" DestinationFolder="$(IntermediateOutputPath)" />
+  </Target>
+
+  <Target Name="UnzipSourcesFiles" AfterTargets="DownloadSourcesFiles" BeforeTargets="Build;Protobuf_BeforeCompile" Condition="!Exists('$(IntermediateOutputPath)/open-match-$(OpenMatchVersion)')">
+      <Unzip SourceFiles="$(IntermediateOutputPath)/om-sources-$(OpenMatchVersion).zip" DestinationFolder="$(IntermediateOutputPath)" OverwriteReadOnlyFiles="true" />
+  </Target>
+
+</Project>
