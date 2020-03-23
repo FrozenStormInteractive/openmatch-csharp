@@ -5,22 +5,22 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
+  solution: 'OpenMatch.csharp.sln'
   buildConfiguration: 'Release'
 
 steps:
-  - task: NuGetToolInstaller@1
-
-  - task: NuGetCommand@2
+  - task: DotNetCoreCLI@2
     inputs:
-      restoreSolution: '$(solution)'
+      command: 'restore'
+      projects: |
+        $(solution)
 
-  - task: VSBuild@1
+  - task: DotNetCoreCLI@2
     inputs:
-      solution: '$(solution)'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
+      command: 'build'
+      projects: |
+        $(solution)
+      arguments: -c $(buildConfiguration)
 
 #  - task: VSTest@2
 #    inputs:
