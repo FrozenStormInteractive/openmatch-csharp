@@ -6,7 +6,7 @@
 
     <PackageId>OpenMatch.Api</PackageId>
     <Title>OpenMatch Api</Title>
-    <Version>0.9.0</Version>
+    <Version>0.9.1</Version>
     <PackageDescription>C# API for OpenMatch</PackageDescription>
     <Authors>FrozenStorm Interactive</Authors>
     <PackageLicenseFile>License</PackageLicenseFile>
