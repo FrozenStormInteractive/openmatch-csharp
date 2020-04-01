@@ -1,0 +1,128 @@
+// Copyright 2019 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+package openmatch;
+option go_package = "open-match.dev/open-match/pkg/pb";
+option csharp_namespace = "OpenMatch";
+
+import "api/messages.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "Frontend"
+    version: "1.0"
+    contact: {
+      name: "Open Match"
+      url: "https://open-match.dev"
+      email: "open-match-discuss@googlegroups.com"
+    }
+    license: {
+      name: "Apache 2.0 License"
+      url: "https://github.com/googleforgames/open-match/blob/master/LICENSE"
+    }
+  }
+  external_docs: {
+    url: "https://open-match.dev/site/docs/"
+    description: "Open Match Documentation"
+  }
+  schemes: HTTP
+  schemes: HTTPS
+  consumes: "application/json"
+  produces: "application/json"
+  responses: {
+    key: "404"
+    value: {
+      description: "Returned when the resource does not exist."
+      schema: { json_schema: { type: STRING } }
+    }
+  }
+  // TODO Add annotations for security_defintiions.
+  // See
+  // https://github.com/grpc-ecosystem/grpc-gateway/blob/master/examples/proto/examplepb/a_bit_of_everything.proto
+};
+
+message CreateTicketRequest {
+  // A Ticket object with SearchFields defined.
+  Ticket ticket = 1;
+}
+
+message CreateTicketResponse {
+  // A Ticket object with TicketId generated.
+  Ticket ticket = 1;
+}
+
+message DeleteTicketRequest {
+  // A TicketId of a generated Ticket to be deleted.
+  string ticket_id = 1;
+}
+
+message DeleteTicketResponse {}
+
+message GetTicketRequest {
+  // A TicketId of a generated Ticket.
+  string ticket_id = 1;
+}
+
+message GetAssignmentsRequest {
+  // A TicketId of a generated Ticket to get updates on.
+  string ticket_id = 1;
+}
+
+message GetAssignmentsResponse {
+  // An updated Assignment of the requested Ticket.
+  Assignment assignment = 1;
+}
+
+// The FrontendService implements APIs to manage and query status of a Tickets.
+service FrontendService {
+  // CreateTicket assigns an unique TicketId to the input Ticket and record it in state storage.
+  // A ticket is considered as ready for matchmaking once it is created.
+  //   - If a TicketId exists in a Ticket request, an auto-generated TicketId will override this field.
+  //   - If SearchFields exist in a Ticket, CreateTicket will also index these fields such that one can query the ticket with query.QueryTickets function.
+  rpc CreateTicket(CreateTicketRequest) returns (CreateTicketResponse) {
+    option (google.api.http) = {
+      post: "/v1/frontendservice/tickets"
+      body: "*"
+    };
+  }
+
+  // DeleteTicket immediately stops Open Match from using the Ticket for matchmaking and removes the Ticket from state storage.
+  // The client must delete the Ticket when finished matchmaking with it. 
+  //   - If SearchFields exist in a Ticket, DeleteTicket will deindex the fields lazily.
+  // Users may still be able to assign/get a ticket after calling DeleteTicket on it.
+  rpc DeleteTicket(DeleteTicketRequest) returns (DeleteTicketResponse) {
+    option (google.api.http) = {
+      delete: "/v1/frontendservice/tickets/{ticket_id}"
+    };
+  }
+
+  // GetTicket get the Ticket associated with the specified TicketId.
+  rpc GetTicket(GetTicketRequest) returns (Ticket) {
+    option (google.api.http) = {
+      get: "/v1/frontendservice/tickets/{ticket_id}"
+    };
+  }
+
+  // GetAssignments stream back Assignment of the specified TicketId if it is updated.
+  //   - If the Assignment is not updated, GetAssignment will retry using the configured backoff strategy. 
+  rpc GetAssignments(GetAssignmentsRequest)
+      returns (stream GetAssignmentsResponse) {
+    option (google.api.http) = {
+      get: "/v1/frontendservice/tickets/{ticket_id}/assignments"
+    };
+  }
+}
