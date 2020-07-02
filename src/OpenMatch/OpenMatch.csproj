@@ -6,16 +6,20 @@
     <Title>OpenMatch Api</Title>
     <Version>1.0.0</Version>
     <PackageDescription>C# API for OpenMatch</PackageDescription>
-    <Authors>FrozenStorm Interactive</Authors>
+    <Authors>Yoann Potinet</Authors>
+    <Company>FrozenStorm Interactive</Company>
+    <PackageTags>openmatch</PackageTags>
     <PackageLicenseFile>License</PackageLicenseFile>
-
+    <PackageProjectUrl>https://github.com/FrozenStormInteractive/openmatch-csharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FrozenStormInteractive/openmatch-csharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-
+    <PackageIcon>packageIcon.png</PackageIcon>
+    <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../../License" Pack="true" PackagePath=""/>
+    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
