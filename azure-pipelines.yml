@@ -1,35 +1,71 @@
 trigger:
-  - master
-  - develop
-  - release/*
+  branches:
+    include:
+      - master
+      - develop
+      - refs/tags/v*
+      - release/*
+      - feature/*
+      - hotfix/*
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'OpenMatch.csharp.sln'
-  buildConfiguration: 'Release'
+  Solution: 'OpenMatch.csharp.sln'
+  BuildConfiguration: 'Release'
 
 steps:
+  - task: UseDotNet@2
+    inputs:
+      version: '3.1.x'
+      packageType: runtime
+
   - task: DotNetCoreCLI@2
     name: Restore
     inputs:
       command: 'restore'
       projects: |
-        $(solution)
+        $(Solution)
 
   - task: DotNetCoreCLI@2
     name: Build
     inputs:
       command: 'build'
       projects: |
-        $(solution)
-      arguments: -c $(buildConfiguration)
+        $(Solution)
+      arguments: -c $(BuildConfiguration)
 
   - task: DotNetCoreCLI@2
     name: Test
     inputs:
       command: 'test'
       projects: |
-        $(solution)
-      arguments: -c $(buildConfiguration)
+        $(Solution)
+      arguments: -c $(BuildConfiguration) --collect "Code coverage"
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: publish
+      projects: src/OpenMatch/OpenMatch.csproj
+      arguments: --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/OpenMatch.Api
+      publishWebProjects: false
+      zipAfterPublish: false
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/OpenMatch.Api
+      artifactName: Build Output
+      
+  - task: DotNetCoreCLI@2
+    name: Pack
+    inputs:
+      command: pack
+      packagesToPack: src/OpenMatch/OpenMatch.csproj
+      arguments: -c $(BuildConfiguration)
+      packDirectory: $(Build.ArtifactStagingDirectory)/nuget
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)/nuget
+      artifactName: Nuget package
