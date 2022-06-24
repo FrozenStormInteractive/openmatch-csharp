@@ -23,15 +23,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Access="public" Include="proto/api/**/*.proto" GrpcServices="Both" ProtoRoot="proto;proto/third_party" />
+    <Protobuf Access="public" Include="proto/api/**/*.proto" GrpcServices="Both" ProtoRoot="proto" AdditionalImportDirs="proto/third_party" />
     <Protobuf Access="internal" Include="proto/third_party/google/**/*.proto" GrpcServices="Both" ProtoRoot="proto/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/google" />
     <Protobuf Access="internal" Include="proto/third_party/protoc-gen-openapiv2/**/*.proto" GrpcServices="Both" ProtoRoot="proto/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/protoc-gen-openapiv2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.Net.Client" Version="2.29.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.15.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.29.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.38.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.17.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.38.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
