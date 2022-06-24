@@ -1,6 +1,6 @@
 # OpenMatch C# API
 
-[![Nuget](https://img.shields.io/nuget/dt/OpenMatch.Api)](https://www.nuget.org/packages/OpenMatch.Api/) [![Azure Pipelines](https://dev.azure.com/FrozenStormInteractive/OpenMatch%20CSharp/_apis/build/status/FrozenStormInteractive.openmatch-csharp%20(1)?branchName=master)](https://dev.azure.com/FrozenStormInteractive/OpenMatch%20CSharp/_build/latest?definitionId=11&branchName=master)
+[![Nuget](https://img.shields.io/nuget/dt/OpenMatch.Api)](https://www.nuget.org/packages/OpenMatch.Api/) [![Azure Pipelines](https://dev.azure.com/FrozenStormInteractive/OpenMatch%20CSharp/_apis/build/status/FrozenStormInteractive.openmatch-csharp?branchName=master)](https://dev.azure.com/FrozenStormInteractive/OpenMatch%20CSharp/_build/latest?definitionId=5&branchName=master)
 
 # Usage
 
