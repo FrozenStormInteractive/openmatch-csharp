@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageId>OpenMatch.Api</PackageId>
     <Title>OpenMatch Api</Title>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <PackageDescription>C# API for OpenMatch</PackageDescription>
     <Authors>Yoann Potinet</Authors>
     <Company>FrozenStorm Interactive</Company>
