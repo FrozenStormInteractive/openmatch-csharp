@@ -19,10 +19,10 @@ option csharp_namespace = "OpenMatch";
 
 import "api/messages.proto";
 import "google/api/annotations.proto";
-import "protoc-gen-swagger/options/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/protobuf/empty.proto";
 
-option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "Frontend"
     version: "1.0"
@@ -53,7 +53,7 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
   }
   // TODO Add annotations for security_defintiions.
   // See
-  // https://github.com/grpc-ecosystem/grpc-gateway/blob/master/examples/proto/examplepb/a_bit_of_everything.proto
+  // https://github.com/grpc-ecosystem/grpc-gateway/blob/master/examples/internal/proto/examplepb/a_bit_of_everything.proto
 };
 
 message CreateTicketRequest {
@@ -80,6 +80,47 @@ message WatchAssignmentsResponse {
   // An updated Assignment of the requested Ticket.
   Assignment assignment = 1;
 }
+
+// BETA FEATURE WARNING: This Request message is not finalized and still subject
+// to possible change or removal.
+message AcknowledgeBackfillRequest {
+  // An existing ID of Backfill to acknowledge.
+  string backfill_id = 1;
+
+  // An updated Assignment of the requested Backfill.
+  Assignment assignment = 2;
+}
+
+// BETA FEATURE WARNING: This Request message is not finalized and still subject
+// to possible change or removal.
+message CreateBackfillRequest {
+  // An empty Backfill object.
+  Backfill backfill = 1;
+}
+
+// BETA FEATURE WARNING: This Request message is not finalized and still subject
+// to possible change or removal.
+message DeleteBackfillRequest {
+  // An existing ID of Backfill to delete.
+  string backfill_id = 1;
+}
+
+// BETA FEATURE WARNING: This Request message is not finalized and still subject
+// to possible change or removal.
+message GetBackfillRequest {
+  // An existing ID of Backfill to retrieve.
+  string backfill_id = 1;
+}
+
+// UpdateBackfillRequest - update searchFields, extensions and set assignment.
+// 
+// BETA FEATURE WARNING: This Request message is not finalized and still subject
+// to possible change or removal.
+message UpdateBackfillRequest {
+  // A Backfill object with ID set and fields to update.
+  Backfill backfill = 1;
+}
+
 
 // The FrontendService implements APIs to manage and query status of a Tickets.
 service FrontendService {
@@ -115,6 +156,57 @@ service FrontendService {
       returns (stream WatchAssignmentsResponse) {
     option (google.api.http) = {
       get: "/v1/frontendservice/tickets/{ticket_id}/assignments"
+    };
+  }
+
+  // AcknowledgeBackfill is used to notify OpenMatch about GameServer connection info
+  // This triggers an assignment process.
+  // BETA FEATURE WARNING: This call and the associated Request and Response
+  // messages are not finalized and still subject to possible change or removal.
+  rpc AcknowledgeBackfill(AcknowledgeBackfillRequest) returns (Backfill) {
+    option (google.api.http) = {
+      post: "/v1/frontendservice/backfills/{backfill_id}/acknowledge"
+      body: "*"
+    };
+  }
+
+  // CreateBackfill creates a new Backfill object.
+  // BETA FEATURE WARNING:  This call and the associated Request and Response
+  // messages are not finalized and still subject to possible change or removal.
+  rpc CreateBackfill(CreateBackfillRequest) returns (Backfill) {
+    option (google.api.http) = {
+      post: "/v1/frontendservice/backfills"
+      body: "*"
+    };
+  }
+
+  // DeleteBackfill receives a backfill ID and deletes its resource.
+  // Any tickets waiting for this backfill will be returned to the active pool, no longer pending.
+  // BETA FEATURE WARNING:  This call and the associated Request and Response
+  // messages are not finalized and still subject to possible change or removal.
+  rpc DeleteBackfill(DeleteBackfillRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/frontendservice/backfills/{backfill_id}"
+    };
+  }
+
+  // GetBackfill returns a backfill object by its ID.
+  // BETA FEATURE WARNING:  This call and the associated Request and Response
+  // messages are not finalized and still subject to possible change or removal.
+  rpc GetBackfill(GetBackfillRequest) returns (Backfill) {
+    option (google.api.http) = {
+      get: "/v1/frontendservice/backfills/{backfill_id}"
+    };
+  }
+  
+  // UpdateBackfill updates search_fields and extensions for the backfill with the provided id.
+  // Any tickets waiting for this backfill will be returned to the active pool, no longer pending.
+  // BETA FEATURE WARNING:  This call and the associated Request and Response
+  // messages are not finalized and still subject to possible change or removal.
+  rpc UpdateBackfill(UpdateBackfillRequest) returns (Backfill) {
+    option (google.api.http) = {
+      patch: "/v1/frontendservice/backfills"
+      body: "*"
     };
   }
 }

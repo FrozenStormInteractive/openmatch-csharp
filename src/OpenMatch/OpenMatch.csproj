@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageId>OpenMatch.Api</PackageId>
     <Title>OpenMatch Api</Title>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <PackageDescription>C# API for OpenMatch</PackageDescription>
     <Authors>Yoann Potinet</Authors>
     <Company>FrozenStorm Interactive</Company>
@@ -24,9 +24,8 @@
 
   <ItemGroup>
     <Protobuf Access="public" Include="proto/api/**/*.proto" GrpcServices="Both" ProtoRoot="proto;proto/third_party" />
-
     <Protobuf Access="internal" Include="proto/third_party/google/**/*.proto" GrpcServices="Both" ProtoRoot="proto/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/google" />
-    <Protobuf Access="internal" Include="proto/third_party/protoc-gen-swagger/**/*.proto" GrpcServices="Both" ProtoRoot="proto/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/protoc-gen-swagger" />
+    <Protobuf Access="internal" Include="proto/third_party/protoc-gen-openapiv2/**/*.proto" GrpcServices="Both" ProtoRoot="proto/third_party" OutputDir="$(IntermediateOutputPath)/ThirdParty/protoc-gen-openapiv2" />
   </ItemGroup>
 
   <ItemGroup>
