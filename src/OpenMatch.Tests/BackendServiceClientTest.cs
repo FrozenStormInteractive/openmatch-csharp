@@ -9,7 +9,7 @@ namespace OpenMatch.Tests
         [Fact]
         public void CanCreateBackendServiceClient()
         {
-            var channel = GrpcChannel.ForAddress("localhost:6000");
+            var channel = GrpcChannel.ForAddress("https://localhost:6000");
             var omClient = new OpenMatch.BackendService.BackendServiceClient(channel);
         }
     }
