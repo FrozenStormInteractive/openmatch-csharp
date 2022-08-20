@@ -16,7 +16,7 @@ dotnet add package OpenMatch.Api
 // Create the grpc.
 using var channel = GrpcChannel.ForAddress("https://localhost:5001");
 
-var frontendClient  = new OpenMatch.FrontendService.FrontendServiceClient(channel);
+var frontendClient = new OpenMatch.FrontendService.FrontendServiceClient(channel);
 
 await frontendClient.CreateTicketAsync(request); 
 ```
